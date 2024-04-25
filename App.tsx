@@ -31,7 +31,7 @@ function App(): React.JSX.Element {
       <FlatList
         data={contacts}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     </SafeAreaView>

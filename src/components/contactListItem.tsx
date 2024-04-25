@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export type ContactInfo = {
-  id: number;
+  id: string;
   name: string;
   email: string;
 };
