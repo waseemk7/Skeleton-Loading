@@ -1,57 +1,94 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Skeleton } from "moti/skeleton";
+import { Text, View, StyleSheet } from "react-native";
+import Animated, { FadeIn, Layout } from "react-native-reanimated";
 
 export type ContactInfo = {
-  id: string;
   name: string;
   email: string;
 };
 
 type ContactListItemProps = {
-  contact: ContactInfo;
+  contact?: ContactInfo | null;
 };
 
-const contactListItem: React.FC<ContactListItemProps> = ({ contact }) => {
+const SkeletonCommonProps = {
+  colorMode: "light",
+  transition: {
+    type: "timing",
+    duration: 1500,
+  },
+  backgroundColor: "#D4D4D4",
+} as const;
+
+const ContactListItem: React.FC<ContactListItemProps> = ({ contact }) => {
   return (
-    <View style={styles.item}>
-      <View style={styles.avatar}>
-        <Text style={styles.initialLetter}>{contact.name[0]}</Text>
-      </View>
-      <View style={{ marginLeft: 15 }}>
-        <Text style={styles.name}>{contact.name}</Text>
-        <View style={{ height: 5 }} />
-        <Text style={styles.email}>{contact.email}</Text>
-      </View>
+    <View style={styles.container}>
+      {/* If contact == null -> list is loading */}
+      <Skeleton.Group show={contact == null}>
+        <Skeleton
+          height={70}
+          width={70}
+          radius={"round"}
+          {...SkeletonCommonProps}
+        >
+          {contact && (
+            <Animated.View
+              layout={Layout}
+              entering={FadeIn.duration(1500)}
+              style={styles.circleContainer}
+            >
+              <Text style={{ fontSize: 25, color: "white" }}>
+                {contact.name?.[0]}
+              </Text>
+            </Animated.View>
+          )}
+        </Skeleton>
+        <View style={{ marginLeft: 15 }}>
+          <Skeleton height={30} width={"80%"} {...SkeletonCommonProps}>
+            {contact && (
+              <Animated.Text
+                layout={Layout}
+                entering={FadeIn.duration(1500)}
+                style={{ fontSize: 25 }}
+              >
+                {contact.name}
+              </Animated.Text>
+            )}
+          </Skeleton>
+          <View style={{ height: 5 }} />
+          <Skeleton height={25} width={"70%"} {...SkeletonCommonProps}>
+            {contact && (
+              <Animated.Text
+                layout={Layout}
+                entering={FadeIn.duration(1500)}
+                style={{ fontSize: 20 }}
+              >
+                {contact.email}
+              </Animated.Text>
+            )}
+          </Skeleton>
+        </View>
+      </Skeleton.Group>
     </View>
   );
 };
 
-export default contactListItem;
-
 const styles = StyleSheet.create({
-  item: {
-    flexDirection: "row",
+  container: {
     width: "100%",
     height: 120,
+    flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
   },
-  avatar: {
+  circleContainer: {
     height: 70,
     aspectRatio: 1,
     backgroundColor: "#005CB7",
     borderRadius: 35,
-    alignItems: "center",
     justifyContent: "center",
-  },
-  initialLetter: {
-    fontSize: 25,
-    color: "white",
-  },
-  name: {
-    fontSize: 25,
-  },
-  email: {
-    fontSize: 20,
+    alignItems: "center",
   },
 });
+
+export { ContactListItem };
