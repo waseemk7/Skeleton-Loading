@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-type ContactInfo = {
-  id: number;
-  name: string;
-  email: string;
-};
+import ContactListItem, { ContactInfo } from "./src/components/contactListItem";
 
 function App(): React.JSX.Element {
   const [contacts, setContacts] = useState<ContactInfo[]>([]);
@@ -27,10 +23,7 @@ function App(): React.JSX.Element {
   }, []);
 
   const renderItem = ({ item }: { item: ContactInfo }) => (
-    <View style={styles.item}>
-      <Text>{item.name}</Text>
-      <Text>{item.email}</Text>
-    </View>
+    <ContactListItem contact={item} />
   );
 
   return (
@@ -51,11 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  item: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    paddingTop: 50,
   },
   separator: {
     height: 1,
